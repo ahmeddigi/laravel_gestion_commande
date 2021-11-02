@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Hash;
+
 
 class User extends Authenticatable
 {
@@ -21,8 +23,22 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        
     ];
+
+
+    /**
+     * Get all of the commandes for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function commandes()
+    {
+        return $this->hasMany('App\Models\Commande');
+    }
+
+
+
+    
 
     /**
      * The attributes that should be hidden for serialization.

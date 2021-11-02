@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use App\Models\User;
+use DB;
+
 
 
 
@@ -17,7 +21,17 @@ class Productcontroller extends Controller
      */
     public function getproducts()
     {
-        return Product::all();
+        
+
+        
+
+        $data = DB::table('products')->get();
+
+
+        return response()->json($data, 200);
+
+        
+
     }
 
     /**
@@ -28,48 +42,29 @@ class Productcontroller extends Controller
      */
     public function createproduct(Request $request)
     {
-        //
+
+       
+        $validator = Validator::make($request->all(), [
+            'pname' => 'required|string',
+        ]);
+
+        if($validator->fails()) {
+            return response()->json(['success'=> false, 'error'=> $validator->messages()],400);
+        }
 
 
         if (Auth::user()->isadmin) {
-
-
-            dd(Auth::user()->isadmin);
-            # code...
+            $product = Product::create([
+                'pname' => $request->pname,
+            ]);
+            return response($product, 201);
+        }
+        else{
+            return response([
+                'message' => 'only admin can Add product'
+            ], 401);
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+   
 }

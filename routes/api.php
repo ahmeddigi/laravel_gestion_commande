@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Productcontroller;
+use App\Http\Controllers\CommandeController;
+
 
 
 /*
@@ -25,7 +27,12 @@ Route::post('/login', [AuthController::class, 'login']);
 
 
 
+
+
+
 Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::get('/commandes', [CommandeController::class, 'getcommands']);
+    Route::post('/createcommande', [CommandeController::class, 'createcommande']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/products', [Productcontroller::class,'getproducts']);
     Route::post('/product', [Productcontroller::class,'createproduct']);
