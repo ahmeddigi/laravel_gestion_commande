@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Commande;
+use App\Models\commandeitem;
 
 class Product extends Model
 {
@@ -16,21 +16,21 @@ class Product extends Model
     ];
 
 
+    // public function commande()
+    // {
+    //     return $this->ha(commandeitem::class);
+    // }
 
-      
-    public function commande()
+
+    /**
+     * Get all of the comments for the Product
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function commandeitem(): HasMany
     {
-
-        return $this->belongsToMany(
-            Commande::class,
-            'commandeproducts',
-            'product_id',
-            'commande_id',);
-
-
+        return $this->hasMany(commandeitem::class);
     }
-
-
 
 
 

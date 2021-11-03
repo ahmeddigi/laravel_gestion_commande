@@ -53,7 +53,8 @@ class Productcontroller extends Controller
         }
 
 
-        if (Auth::user()->isadmin) {
+        if (User::with('role')->where('id', Auth::user()->id)
+        ->first()->role->code == 'ADMIN') {
             $product = Product::create([
                 'pname' => $request->pname,
             ]);

@@ -15,11 +15,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+
+
+        $roles = [
+            ['code' => 'ADMIN', 'name' => 'Administrateur'],
+            ['code' => 'CLIENT', 'name' => 'client'],
+        ];
+        DB::table('roles')->insert($roles);
+
+
         DB::table('users')->insert([
             'name' => 'admin',
             'email' => 'admin@test.com',
             'password' => Hash::make('123456'),
             'isadmin' => true,
+            'role_id' => 1,
         ]);
     }
 }

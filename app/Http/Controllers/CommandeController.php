@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\Commande;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
-use App\Models\commandeproduct;
+use App\Models\commandeitem;
 use Illuminate\Support\Facades\Validator;
+
+use DB;
 
 
 
@@ -24,7 +26,7 @@ class CommandeController extends Controller
     public function getcommands()
     {
         //
-        $data = Commande::with('product')->get();
+        $data = Commande::with('commandeitem')->get();
         return response()->json($data, 200);
     }
 
@@ -40,8 +42,7 @@ class CommandeController extends Controller
 
 
         $rules = [ 
-            'id' => 'required|Integer',
-            'quantitie' => 'required|Integer',
+            'commands' => 'required',
             ];
        
         $validator = Validator::make($request->all(), $rules);
@@ -52,51 +53,60 @@ class CommandeController extends Controller
         }
 
 
-        $product = Product::where('id', $request->id)->first();
+        $data = collect($request->commands);
 
-        if (!$product) {
-            return response([
-                'message' => 'Product not found'
-            ], 404);
-        }
-
-
+        
         $commande = Commande::create([
-            'quantite' => $request->quantitie,
             'user_id' => Auth::user()->id,
         ]);
 
 
-        $commande->product()->attach($product->id);
+        $data = $data->map(function ($item) use($commande) {
+            $nitem = $item;
+            $nitem['commande_id'] = $commande->id;
+            return $nitem;
+        });
+
+
+
+        $commandeitem = commandeitem::insert($data->toArray());
+
+        
 
 
 
 
+        // foreach ($data->toArray() as $item) { 
+        // $product = Product::where('id', $item['id'])->first();
+           
+        // if (!$product) {
+        //     return response([
+        //         'message' => "{$item['id']} not found"
+        //     ], 404);
+                  
+        // }
 
 
 
+        // $commandeitem =  commandeitem::create([
+
+        //     'quantite' => $item['quantite'],
+        //     'commande_id' => $commande->id,
+        //     'product_id' => $item['id']
+
+
+        // ]);
+
+    
 
 
 
+        
 
+            
+        // }
 
-
-        return response($commande, 201);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        return response(Commande::with('commandeitem.commande')->where('id',$commande->id)->get(), 201);
       
     }
 
