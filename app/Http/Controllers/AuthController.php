@@ -64,7 +64,7 @@ class AuthController extends Controller
             return response()->json(['success'=> false, 'error'=> $validator->messages()],400);
         }
         // Check email
-        $user = User::where('email', $request['email'])->first();
+        $user = User::with('role')->where('email', $request['email'])->first();
 
         // Check password
         if(!$user || !Hash::check($request['password'], $user->password)) {

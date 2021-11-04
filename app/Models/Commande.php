@@ -23,69 +23,12 @@ class Commande extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function commandeitem()
+    public function commandeitems()
     {
         return $this->hasMany(commandeitem::class);
     }
 
 
-
-
-    /**
-     * Get the product associated with the Commande
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-
-
-     /**
-      * Get the user that owns the Commande
-      *
-      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-      */
-
-    
-
-    /**
-     * Get the user that owns the Commande
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-
-     /**
-      * The roles that belong to the Commande
-      *
-      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-      */
-
-      
-    // public function product()
-    // {
-
-
-    //     return $this->belongsToMany(
-    //         Product::class,
-    //         'commandeproducts',
-    //         'commande_id',
-    //         'product_id');
-
-
-
-       
-    // }
-  
-    
-
-
-
- 
-
-
-    /**
-     * Get the user that owns the Commande
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function user()
     {
         return $this->belongsTo('App\Models\User');

@@ -24,30 +24,8 @@ class commandeitem extends Model
 
 
 
-
-    /**
-     * Get all of the comments for the commandeitem
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-   /**
-    * The commande that belong to the commandeitem
-    *
-    * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-    */
-   public function commande()
+   public function product()
    {
-       return $this->belongsToMany(Commande::class);
-   }
-
-
-   /**
-    * Get all of the products for the commandeitem
-    *
-    * @return \Illuminate\Database\Eloquent\Relations\HasMany
-    */
-   public function products()
-   {
-       return $this->belongsToMany(Product::class);
+       return $this->belongsTo(Product::class,'commande_id','id');
    }
 }

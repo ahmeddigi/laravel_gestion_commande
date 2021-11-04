@@ -43,7 +43,7 @@ class CommandeController extends Controller
 
         $rules = [ 
             'commands' => 'required',
-            ];
+        ];
        
         $validator = Validator::make($request->all(), $rules);
 
@@ -73,40 +73,7 @@ class CommandeController extends Controller
 
         
 
-
-
-
-        // foreach ($data->toArray() as $item) { 
-        // $product = Product::where('id', $item['id'])->first();
-           
-        // if (!$product) {
-        //     return response([
-        //         'message' => "{$item['id']} not found"
-        //     ], 404);
-                  
-        // }
-
-
-
-        // $commandeitem =  commandeitem::create([
-
-        //     'quantite' => $item['quantite'],
-        //     'commande_id' => $commande->id,
-        //     'product_id' => $item['id']
-
-
-        // ]);
-
-    
-
-
-
-        
-
-            
-        // }
-
-        return response(Commande::with('commandeitem.commande')->where('id',$commande->id)->get(), 201);
+        return response(Commande::with('commandeitems.product')->where('id',$commande->id)->get(), 201);
       
     }
 

@@ -27,7 +27,7 @@ class Product extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function commandeitem(): HasMany
+    public function commandeitems()
     {
         return $this->hasMany(commandeitem::class);
     }
