@@ -26,13 +26,8 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 
-
-
-
-
-Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::get('/commandes', [CommandeController::class, 'getcommands']);
-    Route::post('/createcommande', [CommandeController::class, 'createcommande']);
+Route::group(['middleware' => ['AhmedAuth']], function () {
+    Route::resource('/commandes', CommandeController::class);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/products', [Productcontroller::class,'getproducts']);
     Route::post('/product', [Productcontroller::class,'createproduct']);

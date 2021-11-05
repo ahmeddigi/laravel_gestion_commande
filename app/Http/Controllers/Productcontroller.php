@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use DB;
+use App\Http\Resources\ProductResource;
 
 
 
@@ -21,16 +22,8 @@ class Productcontroller extends Controller
      */
     public function getproducts()
     {
-        
-
-        
-
         $data = DB::table('products')->get();
-
-
-        return response()->json($data, 200);
-
-        
+        return response(ProductResource::collection($data), 200);   
 
     }
 
@@ -42,8 +35,7 @@ class Productcontroller extends Controller
      */
     public function createproduct(Request $request)
     {
-
-       
+  
         $validator = Validator::make($request->all(), [
             'pname' => 'required|string',
         ]);

@@ -28,8 +28,8 @@ class DatabaseSeeder extends Seeder
             'name' => 'admin',
             'email' => 'admin@test.com',
             'password' => Hash::make('123456'),
-            'isadmin' => true,
             'role_id' => 1,
+            'token' => "dsfdsfdfdds"
         ]);
     }
 }

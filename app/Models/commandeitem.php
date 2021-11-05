@@ -11,7 +11,7 @@ use App\Models\Product;
 
 
 
-class commandeitem extends Model
+class Commandeitem extends Model
 {
     use HasFactory;
 

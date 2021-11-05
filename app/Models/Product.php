@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\commandeitem;
+use App\Models\Commandeitem;
 
 class Product extends Model
 {
@@ -29,7 +29,7 @@ class Product extends Model
      */
     public function commandeitems()
     {
-        return $this->hasMany(commandeitem::class);
+        return $this->hasMany(Commandeitem::class);
     }
 
 

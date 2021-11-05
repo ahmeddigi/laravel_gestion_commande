@@ -9,14 +9,16 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use DB;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\UserResource;
+use Illuminate\Support\Str;
+
+
 
 
 class AuthController extends Controller
 {
 
-    //  function to register clients 
     public function register(Request $request) {
-
     
         $credentials = $request->only('email','name','password','password_confirmation');
     
@@ -30,18 +32,37 @@ class AuthController extends Controller
             return response()->json(['success'=> false, 'error'=> $validator->messages()],400);
         }
 
-        $user = User::create([
-            'email' => $request->email,
-            'name' => $request->name,
-            'password' => $request->password
-        ]);
+
+        try {
+            $createduser  = User::create([
+                'email' => $request->email,
+                'name' => $request->name,
+                'password' => $request->password
+            ]);
+
+          
+         } catch (\Throwable $th) {
+            
+
+        }
+
+
 
         
-        $token = $user->createToken('myapptoken')->plainTextToken;
+        $user = User::find($createduser->id);
+        $id =  "id" . "$user->id" ;
+        $token =    hash('sha256', Str::random(60));
+        $token .= $id;
+        $user->token = $token;
+        $user->save();
+
+    
+
+        
+        // $token = $user->createToken('myapptoken')->plainTextToken;
 
         $response = [
-            'user' => $user,
-            'token' => $token
+            'user' => new UserResource($user),
         ];
         return response($response, 201);
     }
@@ -76,7 +97,7 @@ class AuthController extends Controller
         $token = $user->createToken('myapptoken')->plainTextToken;
 
         $response = [
-            'user' => $user,
+            'user' => new UserResource($user),
             'token' => $token
         ];
 

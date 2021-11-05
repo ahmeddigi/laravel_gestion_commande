@@ -6,8 +6,11 @@ use Illuminate\Http\Request;
 use App\Models\Commande;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
-use App\Models\commandeitem;
+use App\Models\Commandeitem;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\CommandeResource;
+use App\Http\Resources\CommandeitemResource;
+use Illuminate\Support\Facades\Gate;
 
 use DB;
 
@@ -18,25 +21,15 @@ use DB;
 
 class CommandeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function getcommands()
+
+    public function index()
     {
-        //
-        $data = Commande::with('commandeitem')->get();
-        return response()->json($data, 200);
+        $data = Commande::with('commandeitems.product')->where('user_id',auth::user()->id)->get();
+        return CommandeResource::collection($data);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function createcommande(Request $request)
+
+    public function store(Request $request)
 
     {
 
@@ -69,43 +62,53 @@ class CommandeController extends Controller
 
 
 
-        $commandeitem = commandeitem::insert($data->toArray());
+       Commandeitem::insert($data->toArray());
 
         
 
-        return response(Commande::with('commandeitems.product')->where('id',$commande->id)->get(), 201);
+        return response(CommandeResource::collection(Commande::with('commandeitems.product')->where('id',$commande->id)->get()), 201);
       
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+  
     public function show($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+   
     public function update(Request $request, $id)
     {
-        //
+
+
+        $rules = [ 
+            'quantite' => 'required|int',
+        ];
+       
+        $validator = Validator::make($request->all(), $rules);
+
+
+        if($validator->fails()) {
+            return response()->json(['success'=> false, 'error'=> $validator->messages()],400);
+        }
+
+        if (Gate::allows('update',Commande::find($id)))
+        {
+         $command = Commandeitem::where('commande_id',$id)->update(['quantite'=>$request->quantite]);   
+         return response(
+            CommandeitemResource::collection(Commandeitem::where('commande_id',$id)->get())
+        , 201);
+         
+        }
+        else{
+            return response([
+                'message' => 'Not Authorized'
+            ], 401);
+        }
+        
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function destroy($id)
     {
         //
